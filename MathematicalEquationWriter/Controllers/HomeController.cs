@@ -18,6 +18,17 @@ namespace MathematicalEquationWriter.Controllers
             return View();
         }
 
+        public IActionResult MathExpression()
+        {
+            return View();
+        }
+
+        [HttpPost]
+        public IActionResult MathExpression(String expression)
+        {
+            return View();
+        }
+
         public IActionResult Privacy()
         {
             return View();
