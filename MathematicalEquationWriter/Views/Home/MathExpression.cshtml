@@ -1,0 +1,114 @@
+﻿@{
+    ViewData["Title"] = "Write Math Expression";
+}
+
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8" />
+    <title>@ViewData["Title"]</title>
+
+    <!-- MathLive CDN -->
+    <script src="https://unpkg.com/mathlive"></script>
+
+    <style>
+        math-field {
+            width: 100%;
+            min-height: 60px;
+            font-size: 1.4rem;
+            padding: 10px;
+            border-radius: 8px;
+            border: 2px solid #4f46e5;
+            background: #f9fafb;
+        }
+
+        .container {
+            max-width: 800px;
+            margin: 40px auto;
+            font-family: sans-serif;
+        }
+
+        .btn {
+            margin-top: 20px;
+            padding: 10px 16px;
+            font-size: 16px;
+            cursor: pointer;
+        }
+
+        .preview {
+            margin-top: 30px;
+            padding: 15px;
+            background: #eef2ff;
+            border-radius: 8px;
+        }
+    </style>
+</head>
+
+<body>
+    <div class="container">
+
+        <h2>➕ Math Quiz Question Create</h2>
+
+        <form method="post">
+            <!-- MathLive Input -->
+            <math-field id="mathInput"></math-field>
+
+            <!-- Hidden input (LaTeX will be stored here) -->
+            <input type="hidden" name="equationLatex" id="equationLatex" />
+
+            <button type="submit" class="btn">Save Question</button>
+        </form>
+
+        @if (ViewBag.SavedEquation != null)
+        {
+            <div class="preview">
+                <h4>✅ Saved Equation (Preview)</h4>
+                <math-field read-only value="@ViewBag.SavedEquation"></math-field>
+
+                <p><strong>LaTeX:</strong> @ViewBag.SavedEquation</p>
+            </div>
+        }
+
+    </div>
+
+    <script>
+        const mf = document.getElementById("mathInput");
+        const hiddenInput = document.getElementById("equationLatex");
+
+        mf.addEventListener("mount", () => {
+            // 🔑 PC + Mobile virtual keyboard
+            mf.mathVirtualKeyboardPolicy = "on";
+
+            // UX improvements
+            mf.smartMode = true;
+            mf.defaultMode = "math";
+            //mf.smartFence = true;
+            mf.placeholder = "\\text{Equation লিখুন}";
+
+            mf.readOnly = false;
+            mf.disabled = false;
+
+        });
+
+        mf.addEventListener("click", () => {
+            mf.focus();
+        });
+
+
+        // Auto show keyboard on focus (PC user)
+        mf.addEventListener("focus", () => {
+            window.mathVirtualKeyboard.show();
+        });
+
+        mf.addEventListener("blur", () => {
+            window.mathVirtualKeyboard.hide();
+        });
+
+        // Before submit, copy LaTeX value
+        document.querySelector("form").addEventListener("submit", () => {
+            hiddenInput.value = mf.value;
+        });
+    </script>
+
+</body>
+</html>
